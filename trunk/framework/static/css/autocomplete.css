@@ -1,0 +1,30 @@
+#auto-complete-area{
+display:none;
+height:100px;
+border:1px solid grey;
+overflow-y:auto;
+padding-left:4px;
+position:absolute;
+background-color:white;
+}
+.auto-comp-res{
+font-family:"Lucida Grande",Geneva,"Bitstream Vera Sans","Luxi Sans",Tahoma,Verdana,Arial,"Trebuchet MS",sans-serif;
+font-size:11px;
+height:20px;
+display:block;
+overflow:hidden;
+text-align:left;
+line-height:20px;
+}
+.auto-comp-res-selected{
+font-family:"Lucida Grande",Geneva,"Bitstream Vera Sans","Luxi Sans",Tahoma,Verdana,Arial,"Trebuchet MS",sans-serif;
+font-size:11px;
+background-color:#808080;
+color:#ffffff;
+cursor:pointer;
+display:block;
+overflow:hidden;
+height:20px;
+text-align:left;
+line-height:20px;
+}

@@ -1,0 +1,57 @@
+.search-pagination{
+    text-align : right;
+    margin-right : 15px;
+    color : black;
+    line-height : 22px;
+}
+
+.search-pages A{
+    color : black;
+    font-size : 11px;
+    margin-right : 10px;
+    text-decoration : none;
+}
+
+.search-previous{
+    width : 90px;
+    padding-left : 15px;
+    text-align : right;
+    background-image:url('/images/previous.gif');
+    background-repeat: no-repeat;
+    background-position : left center;
+}
+
+.search-next{
+    width : 70px;
+    padding-right : 15px;
+    line-height : 25px;
+    text-align : left;
+    background-image:url('/images/next.gif');
+    background-repeat: no-repeat;
+    background-position : right center;
+}
+
+.search-result{
+    padding : 10px;
+}
+
+.search_result H1{
+    color : #526194;
+}
+
+.pink{
+    color : #7A1993;
+    text-decoration : underline;
+    font-weight : bold;
+}
+
+.learn-more{
+    text-align : right;
+    padding : 10px;
+    border-bottom : 1px solid #ccc;
+}
+
+.search-pages{
+    text-align : right;
+    margin : 15px;
+}

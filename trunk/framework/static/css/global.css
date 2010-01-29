@@ -1,0 +1,114 @@
+html, body {
+  margin:0px;
+  padding:0px;
+}
+body {
+  font-family:Verdana, Arial, sans-serif;
+  font-size:11px;
+  color:#3F4554;
+  text-align:left;
+  line-height: 1.8em;
+}
+
+#lang{
+	position : absolute;
+	text-align : right;
+	padding-right : 10px;
+	width : 200px;
+	height : 20px;
+	right : 0px;
+	bottom : 0px;	
+}
+
+#wrapper {
+  width:800px;
+  margin:15px auto 15px auto;
+  padding:0px;
+  text-align:left;
+  border:solid 1px #dadada;
+}
+#header {
+  width:100%;
+  height:70px;
+  position : relative;
+  background-color:#f1f1f1;
+  border-bottom:solid 1px #dadada;
+}
+#container {
+  width:100%;
+  height:auto;
+  margin:0px;
+  padding:0px;
+  background-image: url(divider.gif);
+  background-repeat: repeat-y;
+  background-position: 200px 0px;
+}
+
+#left {
+  width: 160px;
+  height: auto;
+  float: left;
+  padding: 20px;
+  margin: 0px;
+}
+#right {
+  width: 525px;
+  height: auto;
+  float: left;
+  padding: 20px 50px 20px 20px;
+  margin: 0px;
+  border-left : 1px solid #dadada;
+}
+#right p {
+  margin: 0px;
+}
+
+.clearer {
+  font-size: 0px;
+  height: 0px;
+  width: 100%;
+  display: block;
+  clear: both;
+}
+#nav {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  list-style-image: none;
+}
+#nav li {
+  margin: 0px;
+  padding: 0px;
+  display: inline;
+}
+#nav li a:link, #nav li a:visited, #nav li a:active {
+    color:#3F4554;
+    text-decoration: none;
+    display: block;
+    margin: 0px;
+    padding: 0px;
+    width: 160px;
+}
+#nav li a:hover {
+  color: #ccc;
+  text-decoration: none;
+}
+#footer {
+  padding: 0px;
+  margin: 0px;
+  border-top: solid 1px #dadada;
+  text-align: center;
+}
+#footer p {
+  margin: 0px auto 0px auto;
+  padding: 10px 0px 10px 0px;
+  color: #aaa;
+}
+#footer a:link, #footer a:visited, #footer a:active {
+  color: #aaa;
+  text-decoration: none;
+}
+#footer a:hover {
+  color: #ccc;
+  text-decoration: none;
+}

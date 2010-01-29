@@ -1,0 +1,54 @@
+#overlay{
+	display:none;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	background-color: black;
+	opacity:.3;
+	filter: alpha(opacity=30);
+}
+
+#loading{
+	display:none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	background-color: white;
+	width : 140px;
+	height : 40px;
+	border : 1px solid #cccccc;
+	margin-left : -70px;
+	margin-top : -20px;
+	text-align : center;
+}
+
+#popupContainer{
+	position : relative;
+	border : 1px solid #dddddd;
+	background-color : white;
+	overflow : auto;
+}
+
+.window-title{
+    height : 24px;
+    float : left;
+    width : 90%;
+    font-weight : bold;
+    margin-left : 5px;
+    padding-top : 3px;
+}
+
+.windowbody{
+    padding : 10px;
+}
+
+.title-container{
+    height : 24px;
+	background:transparent url(/framework/admin/imgs/bar.gif) repeat-x 0 top;
+}
+
+.close-window{
+    float : right;
+    cursor : pointer;
+    padding : 5px 5px 0px 0px;
+}

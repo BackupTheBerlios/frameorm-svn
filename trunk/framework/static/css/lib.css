@@ -1,0 +1,137 @@
+.fright{
+    float : right;
+}
+
+.fleft{
+    float : left;
+}
+
+h1{
+    font-size:16px;
+    line-height : 20px;
+    color : white;
+}
+
+h2{
+    font-size:14px;
+    line-height : 20px;
+    color : white;
+}
+
+h3{
+    font-size:11px;
+    line-height : 15px;
+    color : white;
+}
+
+.h30{
+	height : 30px;
+}
+
+.h50{
+	height : 50px;
+}
+
+.w80{
+    width : 80px;
+}
+
+.w100{
+    width : 100px;
+}
+
+.w120{
+    width : 120px;
+}
+
+.w150{
+    width : 150px;
+}
+
+.w200{
+    width : 200px;
+}
+
+.w360{
+    width : 365px;
+}
+
+.w740{
+    width : 740px;
+}
+
+.mright5{
+    margin-right  :5px;
+}
+
+.mleft10{
+    margin-left  :10px;
+}
+
+.mleft20{
+    margin-left  :20px;
+}
+
+.mtop20{
+    margin-top : 20px;
+}
+
+.relative{
+    position : relative;
+}
+
+.inline{
+    display : inline;
+}
+
+.padding10{
+    padding : 10px;
+}
+
+.padding15{
+    padding : 15px;
+}
+
+.absolute{
+    position : absolute;
+}
+
+.height50{
+    height : 50px;
+}
+
+.border1{
+    border : 1px solid black;
+}
+
+.hidden{
+    display : none;
+}
+
+.visible{
+    display : block;
+}
+
+.pointer{
+    cursor : pointer;
+}
+
+.font12{
+    font-size : 12px;
+}
+
+.font14{
+    font-size : 14px;
+}
+
+.font16{
+    font-size : 16px;
+}
+
+.border0{
+    border-width : 0px;
+}
+
+.bold{
+    font-weight : bold;
+}
