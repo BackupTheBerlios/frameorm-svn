@@ -33,7 +33,8 @@ class Router
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
-			if($_SERVER['CONTENT_TYPE'] == 'application/x-www-form-urlencoded'){
+			if($_SERVER['CONTENT_TYPE'] == 'application/x-www-form-urlencoded' || 
+				strstr($_SERVER['CONTENT_TYPE'] , 'multipart/form-data')){
 				$this->args = array($_POST);
 			}
 			else if(ereg('application/json', $_SERVER['CONTENT_TYPE']))
