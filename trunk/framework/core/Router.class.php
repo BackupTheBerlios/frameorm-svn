@@ -130,7 +130,6 @@ class Router
 				
 			$context->response->body = $oResp;
 			$this->postProcess($this->oReflection);
-			$context->response->write();
 		}
 		catch(UnauthorizedException $e){
 			$context->response->httpCode = 401;
