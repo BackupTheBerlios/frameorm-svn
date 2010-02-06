@@ -8,9 +8,7 @@ function getPublicObjectVars($obj)
 BASE CLASS FOR ALL DB TABLES
 */
 class Table implements EventHandler
-{
-	protected $db;
-	
+{	
 	/**
 	 * Initialize object
 	 * Accept an assoc array (table row or posted data), representing
@@ -23,7 +21,6 @@ class Table implements EventHandler
 	 */
 	public function __construct(array $data) 
 	{
-		$this->db = DB::getInstance();
 		$this->__updateMembers($data);
 	}
 	
@@ -60,7 +57,6 @@ class Table implements EventHandler
 	{
 		$data = getPublicObjectVars($this);
 		unset($data['table']);
-		unset($data['db']);
 		return $data;
 	}
 	
@@ -72,11 +68,10 @@ class Table implements EventHandler
 	public function delete()
 	{
 		$this->on_delete();
-		
+		$db = DB::getInstance();
 		$q = "DELETE FROM {$this->table['table']} WHERE ". $this->getPkValues();
-		if(!$this->db->db_query($q))
-			throw new AppException("Error deleting object. Query [$q] {$this->db->db_error()}", true);
-		
+		if(!$db->db_query($q))
+			throw new AppException("Error deleting object. Query [$q] {$db->db_error()}", true);
 		$this->on_after_delete();
 	}
 	
@@ -88,15 +83,10 @@ class Table implements EventHandler
 	public function save($forceSave = false)
 	{
 		$key = $this->getFirstPk();
-		try{
-			if ($this->$key == '' || $forceSave)
-				$this->doSave();
-			else
-				$this->update();
-		}
-		catch(AppException $e){
-			throw $e;
-		}
+		if ($this->$key == '' || $forceSave)
+			$this->doSave();
+		else
+			$this->update();
 	}
 	
 	/**
@@ -119,12 +109,13 @@ class Table implements EventHandler
 		$q = "INSERT INTO {$this->table['table']} (";
 		$q .= join(",", array_keys($data)).") VALUES(";
 		$q .= join(",", array_values($data)).")";
-
-		if (!$this->db->db_query($q)){
-			if($this->db->db_errno() == 1062)
-				throw new DuplicateEntry($this->db->db_error());
+		
+		$db = DB::getInstance();
+		if (!$db->db_query($q)){
+			if($db->db_errno() == 1062)
+				throw new DuplicateEntry($db->db_error());
 			else
-				throw new AppException("Error saving new object. Query [$q] {$this->db->db_error()}, true");
+				throw new AppException("Error saving new object. Query [$q] {$db->db_error()}, true");
 		}
 		$this->on_create();
 	}
@@ -158,8 +149,8 @@ class Table implements EventHandler
 	 */
 	private function getFirstPk()
 	{
-		foreach ($this->table['PK'] as $key=>$val)
-			return $key;
+		$keys = array_keys($this->table['PK']);
+		return $keys[0];
 	}
 	
 	/**
@@ -173,7 +164,6 @@ class Table implements EventHandler
 	 */
 	private function setPkValues()
 	{
-		$ret = array();
 		foreach ($this->table['PK'] as $key=>$val)
 		{
 			if (is_null($val))
@@ -206,12 +196,12 @@ class Table implements EventHandler
 		$v = array_values($data);
 		$c = join(",", array_map(array($this, 'joinAll'), $k, $v));
 		$q = "UPDATE {$this->table['table']} SET $c WHERE $pk";
-
-		if (!$this->db->db_query($q)){
-			if($this->db->db_errno() == 1062)
-				throw new DuplicateEntry($this->db->db_error());
+		$db = DB::getInstance();
+		if (!$db->db_query($q)){
+			if($db->db_errno() == 1062)
+				throw new DuplicateEntry($db->db_error());
 			else
-				throw new AppException("Error updating object. Query [$q] {$this->db->db_error()}", true);
+				throw new AppException("Error updating object. Query [$q] {$db->db_error()}", true);
 		}
 		$this->on_update();
 	}
@@ -241,13 +231,14 @@ class Table implements EventHandler
 	 */
 	private function escape(&$value ,$key)
 	{
+		$db = DB::getInstance();
 		$type = DataMapping::getDataType($this->table['table'], $key);
 		if ($type == 'string')
 		{					
 			if ($value == 'null' || $value=='')
 				$value = 'null';
 			else
-				$value = "'".$this->db->db_escape_string($value)."'";
+				$value = "'".$db->db_escape_string($value)."'";
 		}
 		else 
 			$value = ($value=='' || is_null($value))?'NULL':$value;
