@@ -38,7 +38,7 @@ class Table implements EventHandler
 	}
 	
 	public function on_create(){}
-	public function on_update(){}
+	public function on_update($old){}
 	public function on_delete(){}
 	public function on_after_delete(){}
 	
@@ -197,13 +197,15 @@ class Table implements EventHandler
 		$c = join(",", array_map(array($this, 'joinAll'), $k, $v));
 		$q = "UPDATE {$this->table['table']} SET $c WHERE $pk";
 		$db = DB::getInstance();
+		$old_row = Identifiable::getItemById($this->id, $this->table['table']);
+		$old = new $this($old_row);
 		if (!$db->db_query($q)){
 			if($db->db_errno() == 1062)
 				throw new DuplicateEntry($db->db_error());
 			else
 				throw new AppException("Error updating object. Query [$q] {$db->db_error()}", true);
 		}
-		$this->on_update();
+		$this->on_update($old);
 	}
 	
 	/**
