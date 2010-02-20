@@ -6,6 +6,7 @@ function appErrorHandler($errno, $errstr, $errfile, $errline)
     case E_USER_WARNING:
     case E_USER_NOTICE:
     case E_NOTICE:
+    case E_STRICT:
         break;
     case E_USER_ERROR:
     default:
@@ -18,7 +19,7 @@ function appErrorHandler($errno, $errstr, $errfile, $errline)
     }
     return false;
 }
-#set_error_handler("appErrorHandler");
+set_error_handler("appErrorHandler");
 $oRouter = new Router();
 $oRouter->invoke();
 ?>
