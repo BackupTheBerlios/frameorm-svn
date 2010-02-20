@@ -27,7 +27,7 @@ class Identifiable extends Table
 		$this->id = $db->db_insert_id();
 	}
 	
-	protected static function getItemById($id, $table)
+	public static function getItemById($id, $table)
 	{
 		$db = DB::getInstance();
 		$rs = $db->db_query("SELECT * FROM $table WHERE id=$id");
