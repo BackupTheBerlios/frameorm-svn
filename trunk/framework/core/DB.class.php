@@ -66,6 +66,12 @@ class DB
 	{
 		return mysql_insert_id($this->link);
 	}
+	
+	public function db_found_rows()
+	{
+		$r = $this->db_query("SELECT FOUND_ROWS() as t");
+		return mysql_result($r,0);
+	}
 
 	public function db_fetch_one($q)
 	{

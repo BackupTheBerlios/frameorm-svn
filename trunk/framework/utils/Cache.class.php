@@ -1,18 +1,16 @@
 <?php
-define(CACHE_DIR, $_SERVER['DOCUMENT_ROOT']."/.cache/");
-define(CACHE_TIME, 30*60);
+define(CACHE_DIR, $_SERVER['DOCUMENT_ROOT']."/.cache");
+
 class Cache
 {
-	private $tpl;
 	public $cache_file;
 	
-	function __construct($tpl)
+	public function __construct($tpl)
 	{
 		$f = preg_replace("/\//","_",$tpl);
-		$this->cache_file = $f.".cache";
-		$this->tpl = $tpl;
 		if(!is_dir(CACHE_DIR))
 			mkdir(CACHE_DIR);
+		$this->cache_file = sprintf("%s/%s.cache", CACHE_DIR, $f);
 	}
 	
 	public static function clearCache()
@@ -32,11 +30,10 @@ class Cache
 	
 	public function isValid($ctime)
 	{
-		$cached = CACHE_DIR . $this->cache_file;
-		if(file_exists($cached))
+		if(file_exists($this->cache_file))
 		{
-			if($ctime > filemtime($cached)){
-				unlink(CACHE_DIR . $this->cache_file);
+			if($ctime > filemtime($this->cache_file)){
+				unlink($this->cache_file);
 				return false;
 			}
 			return true;
@@ -46,20 +43,14 @@ class Cache
 	
 	public function cache($content)
 	{
-		$cached = CACHE_DIR . $this->cache_file;
-		$w = fopen($cached, "wb");
+		$w = fopen($this->cache_file, "wb");
 		fwrite($w, $content);
 		fclose($w);
 	}
 	
 	public function load()
 	{
-		$cached = CACHE_DIR . $this->cache_file;
-		ob_start();
-	    include($cached);
-	    $parsed = ob_get_contents();
-	    ob_end_clean();
-	    return $parsed;
+		return file_get_contents($this->cache_file);
 	}
 }
 ?>

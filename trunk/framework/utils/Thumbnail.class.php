@@ -30,10 +30,37 @@ class Thumbnail
 	public function write($path = null)
 	{
 		if($path)
-			imagejpeg($this->imgResource, $path, 100);
+			imagejpeg($this->imgResource, $path, 90);
 		else
 			imagejpeg($this->imgResource);
 		imagedestroy($this->imgResource);	
+	}
+	
+	public function crop($width, $height)
+	{
+		list($width_orig, $height_orig) = getimagesize($this->imgPath);  
+	    $myImage = imagecreatefromjpeg($this->imgPath);
+	    $ratio_orig = $width_orig/$height_orig;
+	   
+	    if ($width/$height > $ratio_orig) {
+	       $new_height = $width/$ratio_orig;
+	       $new_width = $width;
+	    } else {
+	       $new_width = $height*$ratio_orig;
+	       $new_height = $height;
+	    }
+	   
+	    $x_mid = $new_width/2;  //horizontal middle
+	    $y_mid = $new_height/2; //vertical middle
+	   
+	    $process = imagecreatetruecolor(round($new_width), round($new_height));
+	   
+	    imagecopyresampled($process, $myImage, 0, 0, 0, 0, $new_width, $new_height, $width_orig, $height_orig);
+	    $this->imgResource = imagecreatetruecolor($width, $height);
+	    imagecopyresampled($this->imgResource, $process, 0, 0, ($x_mid-($width/2)), ($y_mid-($height/2)), $width, $height, $width, $height);
+	
+	    imagedestroy($process);
+	    imagedestroy($myImage);
 	}
 	
 	public function square($iDims)
