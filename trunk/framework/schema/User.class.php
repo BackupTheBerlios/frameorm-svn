@@ -4,6 +4,7 @@ class User extends Identifiable
 	public $pass;
 	public $username;
 	public $surname;
+	public $salt;
 	public $table = array(
 						  "table"=>"users",
 						  "PK"=>array(
@@ -16,6 +17,8 @@ class User extends Identifiable
 	public function __construct(array $data=array())
 	{
 		parent::__construct($data);
+		if($this->salt == '')
+			$this->salt = Utils::genRandom();
 	}
 	
 	public function isAdmin()
@@ -28,40 +31,29 @@ class User extends Identifiable
 	
 	public static function getUsers()
 	{
-		$all = parent::getAllItemsByTable('users', 'surname');
-		return new ObjectSet($all, __CLASS__);
+		return parent::getAllItemsByTable(new User);
 	}
 	
 	public static function getUserById($id)
 	{
-		$row = parent::getItemById($id, 'users');
-		return new User($row);
+		return parent::getItemById($id, new User);
 	}
 	
 	public static function getUserByUsername($name)
 	{
 		$q = sprintf("SELECT * FROM users
 					  WHERE username='%s'", $name);
-		$db = DB::getInstance();
-		$rs = $db->db_query($q);
-		if($db->db_num_rows($rs) == 1)
-			return new User($db->db_fetch_array($rs));
-		return null;
+		return Table::query($q, new User);
 	}
 	
 	public function authenticate($pass){
-		$q = sprintf("SELECT * FROM users
-					  WHERE username='%s' AND pass=SHA1('%s')", $this->username, $pass);
-		$db = DB::getInstance();
-		$rs = $db->db_query($q);
-		return $db->db_num_rows($rs) == 1;
+		$pass = sha1($this->salt.$pass);
+		return $this->pass == $pass;
 	}
 	
 	private function encodePassword()
 	{
-		$db = DB::getInstance();
-		$q = sprintf("SELECT SHA1('%s') AS s", $this->pass);
-		$this->pass = $db->db_fetch_one($q);
+		$this->pass = sha1($this->salt.$this->pass);
 	}
 	
 	protected function doSave()

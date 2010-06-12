@@ -8,4 +8,6 @@ $settings->timezone = 'Europe/Athens';
 
 $settings->guest_passwd = 'guest';
 $settings->admin_passwd = 'admin';
+
+define('CACHE_DIR', '.cache');
 ?>

@@ -26,8 +26,8 @@ class Language extends Identifiable
 	{
 		if(is_null(Language::$lang) || (Language::$lang->id != $id))
 		{
-			$row = Identifiable::getItemById("'$id'", 'languages');
-			Language::$lang = new Language($row);
+			$lang = Identifiable::getItemById("'$id'", new Language);
+			Language::$lang = $lang;
 		}
 		return Language::$lang;
 	}
@@ -36,10 +36,10 @@ class Language extends Identifiable
 	{
 		if(is_null(Language::$langs))
 		{
-			$oContext = Context::getInstance();
-			$oLang = Language::getLanguageById($oContext->session->lang);
+			$context = Context::getInstance();
+			$oLang = Language::getLanguageById($context->session->lang);
 			$order = sprintf("(CASE WHEN id=%d THEN 0 ELSE 1 END)", $oLang->id);
-			$rs = Identifiable::getAllItemsByTable('languages', $order);
+			$rs = Identifiable::getAllItemsByTable(new Language, $order);
 			Language::$langs = new ObjectSet($rs, __CLASS__);
 		}
 		return Language::$langs;

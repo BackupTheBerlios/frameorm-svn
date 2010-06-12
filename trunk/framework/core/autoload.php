@@ -1,6 +1,7 @@
 <?php
 include_once($_SERVER['DOCUMENT_ROOT']."/framework/core/Interfaces.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/framework/core/AppException.class.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/framework/core/ObjectSet.class.php");
 function scanFilesystem($dir, $class) 
 {
 	$itemArray = scandir($dir);
@@ -24,7 +25,8 @@ function scanFilesystem($dir, $class)
 function __autoload($class)
 {
 	$libs = array('framework/core', 'framework/schema', 
-				  'framework/servlets', 'framework/utils');
+				  'framework/core/mutex','framework/servlets', 
+				  'framework/utils', 'framework/core/cache');
 	$root = $_SERVER['DOCUMENT_ROOT'];
 	foreach($libs as $dir)
 		scanFilesystem($root."/".$dir, $class);

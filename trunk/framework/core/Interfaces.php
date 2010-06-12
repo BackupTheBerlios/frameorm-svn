@@ -7,7 +7,16 @@ interface EventHandler
 	public function on_after_delete();
 }
 
-interface PostProcessFilter
+interface PersistentLogin extends PreProcessFilter
+{
+	public function checkCookieToken();
+}
+
+interface PreProcessFilter{}
+
+interface PostProcessFilter{}
+
+interface Translatable extends PostProcessFilter
 {
 	public function i18n();
 }

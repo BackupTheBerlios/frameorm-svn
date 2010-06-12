@@ -16,18 +16,12 @@ class Module extends Acl
 	
 	public static function getModules()
 	{
-		$db = DB::getInstance();
-		$q = "SELECT * FROM modules";
-		$rs = $db->db_query($q);
-		if($db->db_num_rows($rs) > 0)
-			return new ObjectSet($rs, __CLASS__);
-		return array();
+		return parent::getAllItemsByTable(new Module);
 	}
 	
 	public static function getModuleById($id)
 	{
-		$row = parent::getItemById($id, 'modules');
-		return new Module($row);
+		return parent::getItemById($id, new Module);
 	}
 	
 	public static function getModuleByName($name)

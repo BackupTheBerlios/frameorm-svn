@@ -1,10 +1,49 @@
 <?php
-class Admin extends Page implements ACLControl
+class Admin extends Page implements ACLControl, PersistentLogin
 {
 	public static $navbar = array();
+	
 	public function __construct()
 	{
 		parent::__construct();
+	}
+	
+	/*
+	 * Pre process filter that checks for the frmauth cookie.
+	 * If the cookie exists and the user is guest, we extract
+	 * the values stored in the cookie (uid, sid, token) and
+	 * query the table for the record. If the record exists,
+	 * we automatically authenticate the user and reissue a
+	 * new token with the same sid.
+	 * 
+	 * In case the uid and sid exist, but the token does not,
+	 * we assume a cookie hijack. Ath this point the user should
+	 * be informed and all tokens associated to the uid-sid pair
+	 * are deleted.
+	 * 
+	 */
+	public function checkCookieToken()
+	{
+		$context = Context::getInstance();
+		if(isset($_COOKIE['frmauth']) && ($context->session->userID == User::GUEST)){
+			$val = explode('_', $_COOKIE['frmauth']);
+			$token = UserToken::getUserToken($val[0], $val[1], $val[2]);
+			if($token){
+				$context->session->userID = (int) $val[0];
+				$context->user = User::getUserById($val[0]);
+				$token->delete();
+				UserToken::setCookieToken($context->user, $val[1]);
+			}else{
+				$token = UserToken::getByUidAndSid($val[0], $val[1]);
+				if($token){
+					//possible cookie theft
+					UserToken::deleteByUidAndSid($val[0], $val[1]);
+					$context->session->destroy();
+					echo 'cookie hijacked';
+					exit();
+				}
+			}
+		}
 	}
 	
 	public function i18n(){}
@@ -59,6 +98,7 @@ class Admin extends Page implements ACLControl
 	
 	public function index()
 	{
+		print_r($_COOKIE);
 		self::$navbar[] = '<a href="/admin/index">Αρχική</a>';
 		$oIndex = $this->getIndexTemplate();
 		return Admin::render($oIndex->parse());

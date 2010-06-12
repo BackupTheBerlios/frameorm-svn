@@ -24,6 +24,22 @@ class Table implements EventHandler
 		$this->__updateMembers($data);
 	}
 	
+	public static function query($query, Table $instance, $is_multi=false)
+	{
+		$db = DB::getInstance();
+		$rs = $db->db_query($query);
+		$num = $db->db_num_rows($rs);
+		
+		if($num == 0)
+			return null;
+			
+		if($num == 1 && !$is_multi){
+			$instance->updateMembers($db->db_fetch_array($rs));
+			return $instance;
+		}
+		return new ObjectSet($rs, get_class($instance));
+	}
+	
 	private function __updateMembers(array $data)
 	{
 		$members = getPublicObjectVars($this);
@@ -197,8 +213,9 @@ class Table implements EventHandler
 		$c = join(",", array_map(array($this, 'joinAll'), $k, $v));
 		$q = "UPDATE {$this->table['table']} SET $c WHERE $pk";
 		$db = DB::getInstance();
-		$old_row = Identifiable::getItemById($this->id, $this->table['table']);
-		$old = new $this($old_row);
+		
+		$old = Identifiable::getItemById($this->id, $this);
+
 		if (!$db->db_query($q)){
 			if($db->db_errno() == 1062)
 				throw new DuplicateEntry($db->db_error());

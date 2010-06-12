@@ -19,7 +19,7 @@ function appErrorHandler($errno, $errstr, $errfile, $errline)
     }
     return false;
 }
-set_error_handler("appErrorHandler");
+#set_error_handler("appErrorHandler");
 $oRouter = new Router();
 $oRouter->invoke();
 ?>

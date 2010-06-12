@@ -1,9 +1,8 @@
 <?php
-include('../lib/core/autoload.php');
-include('../lib/core/settings.php');
+include('../core/autoload.php');
+include('../core/settings.php');
 $db = DB::getInstance();
 $db->start_transaction();
-$langs = array('ελληνικά', 'english');
 
 $t = <<<TB
 CREATE TABLE `users` (
@@ -12,13 +11,29 @@ CREATE TABLE `users` (
   `pass` varbinary(100) default NULL,
   `username` varbinary(100) default NULL,
   `surname` varchar(100) default NULL,
+  `salt` varchar(12) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `NewIndex1` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 TB;
 $db->db_query($t);
-$db->db_query("INSERT INTO users VALUES(NULL, 'Guest', SHA1('{$settings->guest_passwd}'), 'guest', 'User')");
-$db->db_query("INSERT INTO users VALUES(NULL, 'Administrator', SHA1('{$settings->admin_passwd}'), 'admin', '')");
+$salt = Utils::genRandom();
+$pass = $salt.$settings->guest_passwd;
+$db->db_query("INSERT INTO users VALUES(NULL, 'Guest', SHA1('$pass'), 'guest', 'User', '$salt')");
+$salt = Utils::genRandom();
+$pass = $salt.$settings->admin_passwd;
+$db->db_query("INSERT INTO users VALUES(NULL, 'Administrator', SHA1('$pass'), 'admin', '', '$salt')");
+
+$t = <<<TB
+CREATE TABLE `user_token` (                                                                       
+              `uid` int(20) unsigned NOT NULL,                                                                
+              `sid` varchar(12) default NULL,                                                                 
+              `token` varchar(32) default NULL,                                                               
+              PRIMARY KEY  (`uid`, `sid`, `token`),                                                                           
+              CONSTRAINT `user_token_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `users` (`id`) ON DELETE CASCADE  
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
+TB;
+$db->db_query($t);
 
 $t = <<<TB
 CREATE TABLE `modules` (

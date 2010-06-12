@@ -8,6 +8,8 @@ class Response
 	public $httpCode = 200;
 	private $headers = array();
 	
+	private function __construct(){}
+	
 	public function write()
 	{
 		header("Pragma:");

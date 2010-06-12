@@ -61,8 +61,9 @@ class Router
 		return $this->oReflectionMethod->getNumberOfParameters() > 0;
 	}
 	
-	private function checkAuth($oInstance)
+	private function checkAuth()
 	{
+		$oInstance = $this->oReflection;
 		if (count($oInstance->getInterfaces()) > 0)
 		{
 			$class = $this->class;
@@ -87,8 +88,9 @@ class Router
 		}
 	}
 	
-	private function postProcess($oInstance)
+	private function postProcess()
 	{
+		$oInstance = $this->oReflection;
 		if (count($oInstance->getInterfaces()) > 0)
 		{
 			foreach ($oInstance->getInterfaces() as $oInt)
@@ -106,13 +108,34 @@ class Router
 		}
 	}
 	
+	private function preProcess()
+	{
+		$oInstance = $this->oReflection;
+		if (count($oInstance->getInterfaces()) > 0)
+		{
+			foreach ($oInstance->getInterfaces() as $oInt)
+			{
+				if ($oInt->getName() == 'PreProcessFilter' || 
+					$oInt->isSubclassOf(new ReflectionClass('PreProcessFilter')))
+				{
+					foreach($oInt->getMethods() as $method)
+					{
+						$oRefMethod = $oInstance->getMethod($method->getName());
+						$oRefMethod->invoke($oInstance->newInstance());
+					}
+				}
+			}
+		}
+	}
+	
 	public function invoke()
 	{
 		$context = Context::getInstance();
 		try{
 			$this->oReflection = new ReflectionClass($this->class);
-			$this->checkAuth($this->oReflection);
-
+			$this->PreProcess();
+			$this->checkAuth();
+			
 			$this->oReflectionMethod = $this->oReflection->getMethod($this->method);
 			$oResp = null;
 			if ($this->callConstructor())
@@ -129,7 +152,7 @@ class Router
 				$oResp = json_encode($oResp);
 				
 			$context->response->body = $oResp;
-			$this->postProcess($this->oReflection);
+			$this->postProcess();
 		}
 		catch(UnauthorizedException $e){
 			$context->response->httpCode = 401;

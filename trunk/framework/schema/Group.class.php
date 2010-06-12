@@ -20,8 +20,7 @@ class Group extends Identifiable
 	
 	public static function getGroupById($id)
 	{
-		$row = parent::getItemById($id, 'groups');
-		return new Group($row);
+		return parent::getItemById($id, new Group);
 	}
 	
 	public static function getGroups()

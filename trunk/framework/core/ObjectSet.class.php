@@ -1,82 +1,80 @@
 <?php
 class ObjectSet implements ArrayAccess, Iterator, Countable
 {
-        protected $currentIndex, $result, $db, $class_name, $oReflection;
-        public $totalRows;
+	protected $currentIndex;
+	protected $result;
+	protected $totalRows = 0;
+	protected $class_name;
+	protected $oReflection;
+	
+	public function __construct($rs, $object)
+	{
+		$db = DB::getInstance();
+		$this->currentIndex = 0;
+        $this->result = $rs;
+        $this->totalRows = $db->db_num_rows($rs);
+		$this->class_name = $object;
+		$this->oReflection = new ReflectionClass($this->class_name);
+	}
+	
+	public function offsetExists($offset)
+	{
+		return ($offset < $this->totalRows);
+	}
  
-        function __construct($rs,$object)
-        {
-            $this->currentIndex = 0;
-            $this->result = $rs;
-            $this->class_name = $object;
-            $this->db = DB::getInstance();
-            $this->totalRows = $this->db->db_num_rows($this->result);
-            $this->oReflection = new ReflectionClass($this->class_name);
-        }
+	public function offsetGet($offset)
+	{
+		$db = DB::getInstance();
+		$db->db_seek($this->result, $offset);
+		if($row = $db->db_fetch_array($this->result))
+			return $this->oReflection->newInstance($row);
+		throw new Exception("No row");
+	}
  
-        //Region ArrayAccess
-        function offsetExists($offset)
-        {
-        	if ($offset > $this->totalRows-1)
-        		return false;
-        	return true;
-        }
+	public function offsetSet($offset,$value)
+	{
+		throw new Exception("This collection is read only.");
+	}
  
-        function offsetGet($offset)
-        {
-        	$this->db->db_seek($this->result, $offset);
-            if($row = $this->db->db_fetch_array($this->result))
-				return $this->oReflection->newInstance($row);
-            throw new Exception("No row");
-        }
+	public function offsetUnset($offset)
+	{
+		throw new Exception("This collection is read only.");
+	}
  
-        function offsetSet($offset,$value)
-        {
-            throw new Exception("This collection is read only.");
-        }
+	public function count()
+	{
+		return $this->totalRows;
+	}
  
-        function offsetUnset($offset)
-        {
-            throw new Exception("This collection is read only.");
-        }
+	public function current()
+	{
+		return $this->offsetGet($this->currentIndex);
+	}
  
-        function count()
-        {
-            return $this->totalRows;
-        }
+	public function key()
+	{
+		return $this->currentIndex;
+	}
  
-        //Region Iterator
-        function current()
-        {
-            return $this->offsetGet($this->currentIndex);
-        }
+	public function next()
+	{
+		return $this->currentIndex++;
+	}
  
-        function key()
-        {
-            return $this->currentIndex;
-        }
+	public function rewind()
+	{
+		$this->currentIndex = 0;
+	}
  
-        function next()
-        {
-            return $this->currentIndex++;
-        }
+	public function valid()
+	{
+		return $this->offsetExists($this->currentIndex);
+	}
  
-        function rewind()
-        {
-            $this->currentIndex = 0;
-        }
- 
-        function valid()
-        {
-            return $this->offsetExists($this->currentIndex);
-        }
- 
-        function append($value)
-        {
-            throw new Exception("This collection is read only");
-        }
-
-        //EndRegion
+	public function append($value)
+	{
+		throw new Exception("This collection is read only");
+	}
 }
 
 class SlicedObjectSet extends ObjectSet
