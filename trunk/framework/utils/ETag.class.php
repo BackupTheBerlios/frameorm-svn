@@ -15,6 +15,7 @@ class ETag
 		}
 		$response->addHeader('ETag', '"'.$etag.'"');
 		$response->addHeader("Last-Modified", gmdate("D, d M Y H:i:s", $last_modified_time)." GMT");
+		return file_get_contents($path);
 	}
 }
 ?>

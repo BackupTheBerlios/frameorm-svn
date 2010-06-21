@@ -12,6 +12,7 @@ class Response
 	
 	public function write()
 	{
+		ob_start('ob_gzhandler');
 		header("Pragma:");
 		header("Cache-Control:");
 		header("Expires:");

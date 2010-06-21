@@ -34,8 +34,8 @@ class Table implements EventHandler
 			return null;
 			
 		if($num == 1 && !$is_multi){
-			$instance->updateMembers($db->db_fetch_array($rs));
-			return $instance;
+			$class = get_class($instance);
+			return new $class($db->db_fetch_array($rs));
 		}
 		return new ObjectSet($rs, get_class($instance));
 	}

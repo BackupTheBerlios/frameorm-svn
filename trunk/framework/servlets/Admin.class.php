@@ -1,7 +1,6 @@
 <?php
 class Admin extends Page implements ACLControl, PersistentLogin
 {
-	public static $navbar = array();
 	
 	public function __construct()
 	{
@@ -68,13 +67,15 @@ class Admin extends Page implements ACLControl, PersistentLogin
 	
 	public function get_login_url()
 	{
-		return "/page/loginForm";
+		return "https://secure.framework.tld/page/loginForm";
 	}
 	
-	public static function render($body)
+	public function render($body)
 	{
 		$template = new Template('admin/ui.main.tpl');
 		$template->body = $body;
+		$template->js_link = parent::getLink('admin','js');
+		$template->css_link = parent::getLink('admin','css');
 		return $template->parse();
 	}
 	
@@ -90,7 +91,6 @@ class Admin extends Page implements ACLControl, PersistentLogin
 		$oIndex = new Template('admin/ui.index.tpl');
 		$oIndex->navbar = Admin::getNavBar();
 		$oIndex->user = $context->user->username;
-		$context = Context::getInstance();
 		if($context->user->id == User::ADMIN)
 			$oIndex->sections = '<li><a href="/admin/modules">Admin Panel</a></li>';
 		return $oIndex;
@@ -98,18 +98,16 @@ class Admin extends Page implements ACLControl, PersistentLogin
 	
 	public function index()
 	{
-		print_r($_COOKIE);
 		self::$navbar[] = '<a href="/admin/index">Αρχική</a>';
-		$oIndex = $this->getIndexTemplate();
-		return Admin::render($oIndex->parse());
+		$index = Admin::getIndexTemplate();
+		return $this->render($index->parse());
 	}
 	
 	public function modules()
 	{
 		self::$navbar[] = '<a href="/admin/modules">Admin Panel</a>';
-		$oIndex = $this->getIndexTemplate();
+		$oIndex = Admin::getIndexTemplate();
 		$template = new Template('admin/ui.modules.tpl');
-		
 		
 		$user_str = '';
 		$users = User::getUsers();
@@ -130,7 +128,7 @@ class Admin extends Page implements ACLControl, PersistentLogin
 		$template->users = $user_str;
 		$template->modules = $mod_str;
 		$oIndex->content = $template->parse();
-		return Admin::render($oIndex->parse());
+		return $this->render($oIndex->parse());
 	}
 }
 ?>

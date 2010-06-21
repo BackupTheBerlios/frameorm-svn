@@ -1,17 +1,17 @@
 <?php
 class Router
 {
-	private $class;
-	private $args;
-	private $oReflection;
-	private $oReflectionMethod;
+	protected $class;
+	protected $args;
+	protected $oReflection;
+	protected $oReflectionMethod;
 	
 	public function __construct()
 	{
 		$this->setAttrs();
 	}
 	
-	private function setAttrs()
+	protected function setAttrs()
 	{
 		$context = Context::getInstance();
 		
@@ -135,7 +135,6 @@ class Router
 			$this->oReflection = new ReflectionClass($this->class);
 			$this->PreProcess();
 			$this->checkAuth();
-			
 			$this->oReflectionMethod = $this->oReflection->getMethod($this->method);
 			$oResp = null;
 			if ($this->callConstructor())

@@ -4,19 +4,8 @@
 <head>
 	<title>Admin Panel</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" type="text/css" href="/framework/admin/css/admin.css" />
-	<link rel="stylesheet" type="text/css" href="/framework/static/css/lib.css" />
-	<link rel="stylesheet" type="text/css" href="/framework/static/css/autocomplete.css" />
-	<link rel="stylesheet" type="text/css" href="/framework/static/css/window.css" />
-	<link rel="stylesheet" type="text/css" href="/framework/static/css/button.css" />
-	<script type="text/javascript" src="/framework/static/js/sprintf.js"></script>
-	<script type="text/javascript" src="/framework/static/js/utils.js"></script>
-	<script type="text/javascript" src="/framework/static/js/json.js"></script>
-	<script type="text/javascript" src="/framework/static/js/ajax.js"></script>
-	<script type="text/javascript" src="/framework/static/js/autocomplete.js"></script>
-	<script type="text/javascript" src="/framework/static/js/drag.js"></script>
-	<script type="text/javascript" src="/framework/static/js/form.js"></script>
-	<script type="text/javascript" src="/framework/admin/js/admin.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?= $css_link; ?>" />
+	<script type="text/javascript" src="<?= $js_link; ?>"></script>
 </head>
 <body id="<?= $bodyID; ?>">
 	<?= $body; ?>

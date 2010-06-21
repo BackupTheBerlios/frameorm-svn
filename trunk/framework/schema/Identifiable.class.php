@@ -9,11 +9,6 @@ class Identifiable extends Table
 		parent::__construct($data);
 	}
 	
-	public function getCacheName()
-	{
-		return sprintf("%s_%s", $this->id, $this->table['table']);
-	}
-	
 	public static function getItemByName($table, $value, $class)
 	{
 		$q = sprintf("SELECT * FROM %s 
@@ -35,13 +30,15 @@ class Identifiable extends Table
 	
 	public static function getItemById($id, Table $instance)
 	{
-		$query = sprintf("SELECT * FROM %s WHERE id=%s", $instance->table['table'], $id);
+		$query = sprintf("SELECT * FROM %s WHERE id=%s", 
+						 $instance->table['table'], $id);
 		return Table::query($query, $instance);
 	}
 	
 	protected static function getAllItemsByTable(Table $instance, $orderby='name' )
 	{
-		$q = sprintf("SELECT * FROM %s ORDER BY %s", $instance->table['table'], $orderby);
+		$q = sprintf("SELECT * FROM %s ORDER BY %s", 
+					 $instance->table['table'], $orderby);
 		return Table::query($q, $instance, $is_multi=true);
 	}
 	
